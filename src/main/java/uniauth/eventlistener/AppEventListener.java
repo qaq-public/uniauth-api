@@ -33,7 +33,7 @@ public class AppEventListener {
         variable.put("appName", app.getCode());
         variable.put("appNickname", app.getName());
         variable.put("description", app.getDescription());
-        variable.put("email", app.getCreateUser().getEmail());
+        variable.put("open_id", app.getCreateUser().getOpenId());
         variable.put("link", "https://" + qaqHost + "/uniauth/apps/" + app.getCode());
         notifyService.sendCardAdmin(createAppSuccessCardId, variable);
         notifyService.sendCard(createAppSuccessCardId, variable, app.getCreateUser().getOpenId(), ReceiveIdTypeEnum.OPEN_ID.getValue());
