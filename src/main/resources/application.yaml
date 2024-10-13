@@ -1,0 +1,63 @@
+server:
+  port: 8888
+  forward-headers-strategy: native
+spring:
+  sql:
+    init: 
+      mode: always
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+  datasource:
+    url: jdbc:mysql://${MYSQL_USER:root}:${MYSQL_PASSWORD:qard123}@${MYSQL_SERVER:mysql-svc}:${MYSQL_PORT:3306}/uniauth?allowMultiQueries=true
+  aop:
+    auto: true
+    proxy-target-class: false
+  threads:
+    virtual:
+      enabled: true
+
+#notify
+notify:
+  url: https://${QAQ_HOST}/api/notify/messages
+  user: https://${QAQ_HOST}/api/notify/organization/get/userinfo?userid=%s
+  usermap: https://${QAQ_HOST}/api/notify/organization/userMap
+
+#member authorization
+authorization:
+  url: https://${QAQ_HOST}/uniauth/project/member/enrollment
+
+uniauth:
+  host: https://${QAQ_HOST}/uniauth/app/
+
+accession:
+  url: https://${QAQ_HOST}/uniauth/auditRecord
+
+feishu:
+  app_id: ${FEISHU_APP_ID}
+  app_secret: ${FEISHU_APP_SECRET}
+  encrypt_key: ${FEISHU_ENCRYPT_KEY}
+  verification_token: ${FEISHU_VERIFICATION_TOKEN}
+  card:
+    create_project: AAq7dIfU82n5Q
+    create_project_success: AAq7dI6uYvZOb
+    create_app_success: AAq7ddwJBhGhK
+    join_app: AAq7ddoG2zJ1v
+    join_app_success: AAq7dd3iBC5Gn
+    join_app_fail: AAq7ddhvhCi1Q
+    join_project: AAq7dIOwQpexc
+    join_project_success: AAq7dd42H7XkK
+    join_project_fail: AAq7ddEDGMkg4
+rsa:
+  privateKey: ${RSA_PRIVATEKEY}
+
+qaq:
+  admin: ${QAQ_ADMIN}
+  host: ${QAQ_HOST}

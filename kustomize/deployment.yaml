@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uniauth-api
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 60
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: uniauth-api
+  template:
+    metadata:
+      labels:
+        app: uniauth-api
+    spec:
+      imagePullSecrets:
+        - name: imagepullsecret
+      containers:
+        - name: uniauth-api
+          image: blacklee123/uniauth-api:2.2.0
+          imagePullPolicy: Always
+          command: ['java']
+          args:
+            - -jar
+            - -Duser.timezone=GMT+8
+            - app.jar
+          ports:
+            - containerPort: 8888
+          env:
+            - name: MYSQL_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: MYSQL_SERVER
+            - name: MYSQL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: MYSQL_PORT
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: MYSQL_PASSWORD
+            - name: FEISHU_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: FEISHU_APP_ID
+            - name: FEISHU_APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: FEISHU_APP_SECRET
+            - name: FEISHU_ENCRYPT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: FEISHU_ENCRYPT_KEY
+            - name: FEISHU_VERIFICATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: FEISHU_VERIFICATION_TOKEN
+            - name: RSA_PRIVATEKEY
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: RSA_PRIVATEKEY
+            - name: QAQ_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: QAQ_ADMIN
+            - name: QAQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: qaq
+                  key: QAQ_HOST
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          volumeMounts:
+            - mountPath: /app/application.yaml
+              name: uniauth-api-conf
+              subPath: application.yaml
+      volumes:
+        - name: uniauth-api-conf
+          configMap:
+            name: uniauth-api-conf
