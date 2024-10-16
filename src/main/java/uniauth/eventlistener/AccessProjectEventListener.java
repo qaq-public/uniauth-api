@@ -34,7 +34,7 @@ public class AccessProjectEventListener {
     public void accessProject(AccessProjectEvent event) {
         var accessProject = accessProjectRepository.findById(event.getId()).orElseThrow();
         var variable = new HashMap<String, Object>();
-        variable.put("email", accessProject.getCreateUser().getEmail());
+        variable.put("open_id", accessProject.getCreateUser().getOpenId());
         variable.put("projectId",accessProject.getCode());
         variable.put("projectName", accessProject.getName());
         variable.put("studio", accessProject.getStudio());
@@ -49,7 +49,7 @@ public class AccessProjectEventListener {
     public void approveProject(ApproveAccessProjectEvent event) {
         var accessProject = accessProjectRepository.findById(event.getId()).orElseThrow();
         var variable = new HashMap<String, Object>();
-        variable.put("email", accessProject.getCreateUser());
+        variable.put("open_id", accessProject.getCreateUser().getOpenId());
         variable.put("projectId", accessProject.getCode());
         variable.put("projectName", accessProject.getName());
         variable.put("studio", accessProject.getStudio());
