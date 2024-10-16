@@ -45,7 +45,7 @@ public class JoinAppEventListener {
     public void join(JoinAppEvent event) {
         var join = joinAppRepository.findById(event.getId()).orElseThrow();
         var variable = new HashMap<String, Object>();
-        variable.put("email", join.getCreateUser().getEmail());
+        variable.put("open_id", join.getCreateUser(). getOpenId());
         variable.put("appName", join.getApp().getName());
         variable.put("link","https://" + qaqHost + "/uniauth/apps/" + join.getApp().getName());
         var projectAdmins = userService.listAppAdmin(join.getApp());
@@ -60,11 +60,11 @@ public class JoinAppEventListener {
         var join = joinAppRepository.findById(event.getId()).orElseThrow();
         log.info("ApproveJoinProjectEvent: {} {}", event.getId(), join);
         var variable = new HashMap<String, Object>();
-        variable.put("email", join.getCreateUser().getEmail());
+        variable.put("open_id", join.getCreateUser().getOpenId());
         variable.put("appName", join.getApp().getName());
         var roles = join.getAppRoles().stream().map(AppRole::getName).collect(Collectors.joining(","));
         variable.put("roles", roles);
-        variable.put("approvalUser", join.getApproveUser().getEmail());
+        variable.put("approvalUser", join.getApproveUser().getOpenId());
         var appAdmins = userService.listAppAdmin(join.getApp());
         if (!appAdmins.isEmpty()) {
             notifyService.sendCard(joinAppSuccessCardId, variable, appAdmins.stream().map(User::getOpenId).toList(), ReceiveIdTypeEnum.OPEN_ID.getValue());
@@ -77,9 +77,9 @@ public class JoinAppEventListener {
     public void reject(RejectJoinAppEvent event) {
         var join = joinAppRepository.findById(event.getId()).orElseThrow();
         var variable = new HashMap<String, Object>();
-        variable.put("email", join.getCreateUser().getEmail());
+        variable.put("open_id", join.getCreateUser().getOpenId());
         variable.put("appName", join.getApp().getName());
-        variable.put("approvalUser", join.getApproveUser().getEmail());
+        variable.put("approvalUser", join.getApproveUser().getOpenId());
         var appAdmins = userService.listAppAdmin(join.getApp());
         if (!appAdmins.isEmpty()) {
             notifyService.sendCard(joinAppFailCardId, variable, appAdmins.stream().map(User::getOpenId).toList(), ReceiveIdTypeEnum.OPEN_ID.getValue());

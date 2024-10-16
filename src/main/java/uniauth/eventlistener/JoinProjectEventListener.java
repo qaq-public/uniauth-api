@@ -44,7 +44,7 @@ public class JoinProjectEventListener {
     public void join(JoinProjectEvent event) {
         var join = joinProjectRepository.findById(event.getId()).orElseThrow();
         var variable = new HashMap<String, Object>();
-        variable.put("email", join.getCreateUser().getEmail());
+        variable.put("open_id", join.getCreateUser().getOpenId());
         variable.put("projectId", join.getProject().getCode());
         variable.put("link", "https://" + qaqHost + "/uniauth/projects/" + join.getProject().getCode());
         var projectAdmins = userService.listProjectAdmin(join.getProject());
@@ -58,11 +58,11 @@ public class JoinProjectEventListener {
     public void approve(ApproveJoinProjectEvent event) {
         var join = joinProjectRepository.findById(event.getId()).orElseThrow();
         var variable = new HashMap<String, Object>();
-        variable.put("email", join.getCreateUser().getEmail());
+        variable.put("open_id", join.getCreateUser().getOpenId());
         variable.put("projectId", join.getProject().getCode());
         var roles = join.getRoles().stream().map(ProjectRole::getName).collect(Collectors.joining(","));
         variable.put("roles", roles);
-        variable.put("approvalUser", join.getApproveUser().getEmail());
+        variable.put("approvalUser", join.getApproveUser().getOpenId());
         var projectAdmins = userService.listProjectAdmin(join.getProject());
         if(!projectAdmins.isEmpty()) {
             notifyService.sendCard(joinProjectSuccessCardId, variable, projectAdmins.stream().map(User::getOpenId).toList(), ReceiveIdTypeEnum.OPEN_ID.getValue());
@@ -76,9 +76,9 @@ public class JoinProjectEventListener {
         var join = joinProjectRepository.findById(event.getId()).orElseThrow();
         log.info("ApproveJoinProjectEvent: {} {}", event.getId(), join);
         var variable = new HashMap<String, Object>();
-        variable.put("email", join.getCreateUser().getEmail());
+        variable.put("open_id", join.getCreateUser().getOpenId());
         variable.put("projectId", join.getProject().getCode());
-        variable.put("approvalUser", join.getApproveUser().getEmail());
+        variable.put("approvalUser", join.getApproveUser().getOpenId());
         var projectAdmins = userService.listProjectAdmin(join.getProject());
         if(!projectAdmins.isEmpty()) {
             notifyService.sendCard(joinProjectFailCardId, variable, projectAdmins.stream().map(User::getOpenId).toList(), ReceiveIdTypeEnum.OPEN_ID.getValue());
