@@ -94,7 +94,7 @@ public class AppController {
     public ApiResponse<App> update(@RequestBody UpdateAppDto params,
                                    @PathVariable String appCode) {
         var app = appRepository.findByCode(appCode).orElseThrow();
-        app.setName(params.appNickname());
+        app.setName(params.name());
         app.setDescription(params.description());
         app.setAvatar(params.iconUrl());
         appRepository.save(app);
